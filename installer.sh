@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\n\n******** Installing Search Scan"
+echo -e "MOON Cloud\n\n******** Installing Search Scan"
 wget "http://downloads.nessus.org/nessus3dl.php?file=Nessus-6.7.0-es7.x86_64.rpm&licence_accept=yes&t=99f53edd2eebd0bf74fd3673862c3d4f" -O nessus.rpm
 rpm -i nessus.rpm
 systemctl start nessusd.service
