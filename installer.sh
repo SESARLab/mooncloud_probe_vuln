@@ -24,4 +24,4 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 systemctl start mongod.service
 /opt/nessus/sbin/nessuscli adduser admin
 /opt/nessus/sbin/nessuscli fetch --register $NESSUSLICENSE
-cp probe_searchscan.py /usr/lib//usr/lib/python2.7/site-packages/testagent-0.1.0-py2.7.egg/testagent/probes/
+cp probe_searchscan.py /usr/lib/python2.7/site-packages/testagent-0.1.0-py2.7.egg/testagent/probes/
