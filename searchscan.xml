@@ -1,0 +1,44 @@
+<collector probe_driver="probe_searchscan" id="probe_searchscan" cmid="probe_searchscan">
+   <TestCases>
+      <TestCase>
+         <ID>1</ID>
+         <TestInstance Operation="nessus">
+            <Input>
+               <Item key="host" value="https://localhost:8834" />
+               <Item key="login" value="admin" />
+               <Item key="password" value="password" />
+               <Item key="Insecure" value="True" />
+               <Item key="Target" value="ehealthgui2.192.168.43.35.xip.io" />
+            </Input>
+         </TestInstance>
+         <TestInstance Operation="credentials">
+            <Input>
+               <Item key="PrivateKeyPath" value="" />
+               <Item key="certPass" value="" />
+               <Item key="certUser" value="" />
+               <Item key="ssh_user" value="" />
+               <Item key="ssh_pass" value="" />
+               <Item key="MySQL_user" value="" />
+               <Item key="MySQL_pass" value="" />
+               <Item key="MongoDB" value="" />
+               <Item key="MongoDB_user" value="" />
+               <Item key="MongoDB_pass" value="" />
+            </Input>
+         </TestInstance>
+         <TestInstance Operation="parameters">
+            <Input>
+               <Item key="Time" value="2012-12-31T00:00:00.000-00:00" />
+               <Item key="CVSS" value="4.0" />
+               <Item key="Category" value="A1" />
+            </Input>
+         </TestInstance>
+         <TestInstance Operation="mongo">
+            <Input>
+               <Item key="host" value="localhost" />
+               <Item key="port" value="27017" />
+            </Input>
+         </TestInstance>
+      </TestCase>
+   </TestCases>
+</collector>
+

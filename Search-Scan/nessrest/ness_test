@@ -1,0 +1,224 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2014-2015, Tenable Network Security, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#   - Redistributions of source code must retain the above copyright notice,
+#     this list of conditions and the following disclaimer.
+#   - Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#   - Neither the name of Tenable Network Security, Inc. nor the names of its
+#     contributors may be used to endorse or promote products derived from this
+#     software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE,
+# NON-INFRINGEMENT, INTEGRATION, PERFORMANCE, AND ACCURACY AND ANY IMPLIED
+# WARRANTIES ARISING FROM STATUTE, COURSE OF DEALING, COURSE OF PERFORMANCE, OR
+# USAGE OF TRADE, ARE DISCLAIMED. IN NO EVENT SHALL TENABLE NETWORK SECURITY,
+# INC., OR ANY SUCCESSOR-IN-INTEREST, BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+from __future__ import print_function
+######################################################################
+# ness_test - Nessus integration test script
+######################################################################
+
+import sys
+import argparse
+import os
+
+# require arguments, or will be defaulted
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-n", "--name", default='scripted_scan',
+                    help="name of policy/scan. DEFAULT: scripted_scan")
+
+# require arguments, or will exit with help message
+parser.add_argument("-p", "--plugins",  default='',
+                    help="plugins to use in the policy")
+
+parser.add_argument("-t", "--targets",  default='',
+                    help="targets to use in the scan")
+
+parser.add_argument("--smb_user",  default='',
+                    help="SMB user for the policy")
+
+parser.add_argument("--smb_pass",  default='',
+                    help="SMB password for the policy")
+
+parser.add_argument("--smb_domain",  default='',
+                    help="SMB domain for the policy")
+
+parser.add_argument("--smb_user1",  default='',
+                    help="Additional SMB user for the policy")
+
+parser.add_argument("--smb_pass1",  default='',
+                    help="Additional SMB password for the policy")
+
+parser.add_argument("--smb_domain1",  default='',
+                    help="Additional SMB domain for the policy")
+
+parser.add_argument("--smb_user2",  default='',
+                    help="Additional SMB user for the policy")
+
+parser.add_argument("--smb_pass2",  default='',
+                    help="Additional SMB password for the policy")
+
+parser.add_argument("--smb_domain2",  default='',
+                    help="Additional SMB domain for the policy")
+
+parser.add_argument("--smb_user3",  default='',
+                    help="Additional SMB user for the policy")
+
+parser.add_argument("--smb_pass3",  default='',
+                    help="Additional SMB password for the policy")
+
+parser.add_argument("--smb_domain3",  default='',
+                    help="Additional SMB domain for the policy")
+
+parser.add_argument("--ssh_user",  default='',
+                    help="SSH user for the policy")
+
+parser.add_argument("--ssh_pass",  default='',
+                    help="SSH password for the policy")
+
+# toggle action for global variable settings
+parser.add_argument("--cgi", action="store_true",
+                    help="enable CGI scanning")
+
+parser.add_argument("--detach", action="store_true",
+                    help="detach client after starting scan(no results)")
+
+parser.add_argument("--format", action="store_true",
+                    help="generate formatting for pasting to Redmine")
+
+parser.add_argument("--noscan", action="store_true",
+                    help="create the policy only and then exit")
+
+parser.add_argument("--paranoid", action="store_true",
+                    help="enable paranoid scanning")
+
+parser.add_argument("--ports", default='',
+                    help="add additional ports to the value 'default'")
+
+parser.add_argument("--supplied", action="store_true",
+                    help="use only supplied logins")
+
+parser.add_argument("--thorough", action="store_true",
+                    help="enable thorough tests")
+
+parser.add_argument("--unsafe", action="store_true",
+                    help="enable unsafe checks")
+
+parser.add_argument("--verbose", action="store_true",
+                    help="enable verbose reporting")
+
+parser.add_argument("--silent_deps", action="store_true",
+                    help="Hide results from plugins run as a dependency")
+
+parser.add_argument("-6", "--six", action="store_true",
+                    help="import the ness6rest module for scanning")
+
+parser.add_argument("--audit", default="",
+                    help="add an audit file for compliance scanning")
+
+parser.add_argument("--audit_category", default="",
+                    help="the category for the audit file for compliance scanning")
+args = parser.parse_args()
+
+import ness6rest as nessrest
+
+if not args.plugins:
+    print("No plugins set!")
+    sys.exit(1)
+
+login = os.getenv("NESSUS_USER")
+password = os.getenv("NESSUS_PASSWORD")
+url = "https://%s:%s" % (os.getenv("NESSUS_SERVER"),
+                         os.getenv("NESSUS_PORT", "8834"))
+
+scan = nessrest.Scanner(url=url, login=login, password=password)
+
+#scan.safe_checks = config.get('settings', 'safe_checks')
+
+#scan.pref_cgi = config.get('prefs', 'cgi')
+#scan.pref_paranoid = config.get('prefs', 'paranoid')
+#scan.pref_supplied = config.get('prefs', 'supplied_logins')
+#scan.pref_thorough = config.get('prefs', 'thorough')
+#scan.pref_verbose = config.get('prefs', 'verbose')
+#scan.pref_silent_dependencies = config.get('prefs', 'silent_deps')
+
+# override default settings, needed for ACT_ATTACK and ACT_DENIAL
+if args.unsafe:
+    scan.set_safe_checks = "no"
+
+# TODO: smartly append values that don't appear at a later date
+# by abusing array indicies and exception handling, we could add many more
+# set of credentials.
+scan.creds_smb = []
+extras = ["", 1, 2, 3]
+index = 0
+for each in extras:
+    cast = str(each)
+    # Update
+    if eval("args.smb_user" + cast):
+        scan.creds_smb.append({"username": eval("args.smb_user" + cast),
+                               "password": eval("args.smb_pass" + cast),
+                               "domain": eval("args.smb_domain" + cast)})
+
+        index += 1
+
+if (args.ssh_user and args.ssh_pass):
+    scan.creds_ssh.append({"username": args.ssh_user,
+                           "password": args.ssh_pass})
+
+# override config file/Nessus defaults
+if args.cgi:
+    scan.pref_cgi = "yes"
+if args.paranoid:
+    scan.pref_paranoid = "Paranoid (more false alarms)"
+if args.supplied:
+    scan.pref_supplied = "yes"
+if args.thorough:
+    scan.pref_thorough = "yes"
+if args.verbose:
+    scan.pref_verbose = "Verbose"
+if args.silent_deps:
+    scan.pref_silent_dependencies = "yes"
+
+if args.format:
+    scan.format = True
+
+scan.policy_add(name=args.name, plugins=args.plugins)
+
+if args.audit:
+    scan.upload(upload_file=args.audit)
+    scan._policy_add_audit(category=args.audit_category, filename=args.audit)
+
+if args.ports:
+    scan.policy_add_ports(ports=args.ports)
+
+if not args.noscan:
+
+    if not args.targets:
+        print("No targets set!")
+        sys.exit(1)
+
+    scan.scan_add(targets=args.targets)
+    scan.scan_run()
+
+    if args.detach:
+        print("Invoked with '--detach'. Login to the GUI for results.")
+        sys.exit(0)
+
+    scan.scan_results()
