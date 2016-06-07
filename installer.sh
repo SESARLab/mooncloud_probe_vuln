@@ -34,4 +34,5 @@ cve-search/sbin/db_fulltext.py
 echo -e "\n\nNessus admin setup\n"
 /opt/nessus/sbin/nessuscli adduser admin
 /opt/nessus/sbin/nessuscli fetch --register $NESSUSLICENSE
+cp -r SearchScan /usr/lib/python2.7/site-packages/testagent-0.1.0-py2.7.egg/testagent/probes/
 cp probe_searchscan.py /usr/lib/python2.7/site-packages/testagent-0.1.0-py2.7.egg/testagent/probes/
